@@ -3,7 +3,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "Nearby — Orbital Observatory",
   description:
-    "Explore Earth and Apophis through time with real heliocentric NASA/JPL Horizons trajectories.",
+    "Discover near-Earth objects with NASA NeoWs and explore their motion with authoritative JPL Horizons trajectories.",
 };
 export default function RootLayout({
   children,

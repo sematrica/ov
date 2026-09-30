@@ -9,8 +9,11 @@ export const SPEEDS = [
   { label: "30 days / sec", rate: (30 * DAY) / 1000 },
 ];
 export function useSimulation(range: TimeRange) {
-  const [time, setTime] = useState(() => clampTime(Date.now(), range));
-  const [playing, setPlaying] = useState(false);
+  const [clock, setClock] = useState(() => ({
+    time: clampTime(Date.now(), range),
+    playing: false,
+  }));
+  const { time, playing } = clock;
   const [direction, setDirection] = useState<1 | -1>(1);
   const [rate, setRate] = useState(SPEEDS[2].rate);
   useEffect(() => {
@@ -25,9 +28,17 @@ export function useSimulation(range: TimeRange) {
       // Pause elapsed-time accumulation in hidden tabs; do not jump on return.
       if (previous !== null && !document.hidden) {
         const elapsed = now - previous;
-        setTime((current) =>
-          advanceTime(current, elapsed, rate * direction, range),
-        );
+        setClock((current) => {
+          const next = advanceTime(
+            current.time,
+            elapsed,
+            rate * direction,
+            range,
+          );
+          const atBoundary =
+            direction === 1 ? next >= range.end : next <= range.start;
+          return { time: next, playing: !atBoundary };
+        });
       }
       previous = document.hidden ? null : now;
       frame = requestAnimationFrame(tick);
@@ -38,17 +49,21 @@ export function useSimulation(range: TimeRange) {
       document.removeEventListener("visibilitychange", resetElapsed);
     };
   }, [playing, rate, direction, range]);
-  useEffect(() => {
-    if (
-      (direction === 1 && time >= range.end) ||
-      (direction === -1 && time <= range.start)
-    )
-      setPlaying(false);
-  }, [time, direction, range, playing]);
+  const setPlaying = useCallback(
+    (enabled: boolean) =>
+      setClock((current) => ({
+        ...current,
+        playing:
+          enabled &&
+          (direction === 1
+            ? current.time < range.end
+            : current.time > range.start),
+      })),
+    [direction, range],
+  );
   const seek = useCallback(
     (value: number) => {
-      setPlaying(false);
-      setTime(clampTime(value, range));
+      setClock({ time: clampTime(value, range), playing: false });
     },
     [range],
   );

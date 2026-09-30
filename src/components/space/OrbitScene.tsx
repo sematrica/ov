@@ -1,5 +1,5 @@
 "use client";
-import { Component, useMemo, useRef, type ReactNode } from "react";
+import { Component, memo, useMemo, useRef, type ReactNode } from "react";
 import { Canvas, useFrame, type ThreeEvent } from "@react-three/fiber";
 import { Billboard, Line, OrbitControls, Stars } from "@react-three/drei";
 import { DoubleSide } from "three";
@@ -11,9 +11,14 @@ import type {
 } from "@/models/trajectory";
 import { interpolatePosition, toScene } from "@/lib/astronomy/interpolate";
 import { LabelProjection, type LabelElements } from "./SceneLabels";
-export const COLORS = { earth: "#79c9ff", apophis: "#efb977" };
+const NEO_COLORS = ["#efb977", "#c6b3e6", "#93c8b7", "#d8bb9e", "#abc5e0"];
+function objectColor(id: ObjectId): string {
+  if (id === "earth") return "#79c9ff";
+  const hash = [...id].reduce((value, char) => value + char.charCodeAt(0), 0);
+  return NEO_COLORS[hash % NEO_COLORS.length];
+}
 // One scene unit = one AU. Only these marker radii are visually exaggerated.
-const VISUAL_RADIUS = { sun: 0.039, earth: 0.018, apophis: 0.013 };
+const VISUAL_RADIUS = { sun: 0.039, earth: 0.018, asteroid: 0.013 };
 function Body({
   trajectory,
   time,
@@ -26,7 +31,7 @@ function Body({
   onSelect: (id: ObjectId) => void;
 }) {
   const position = toScene(interpolatePosition(trajectory.points, time));
-  const color = COLORS[trajectory.id];
+  const color = objectColor(trajectory.id);
   function select(event: ThreeEvent<MouseEvent>) {
     event.stopPropagation();
     onSelect(trajectory.id);
@@ -34,7 +39,13 @@ function Body({
   return (
     <group position={position}>
       <mesh onClick={select}>
-        <sphereGeometry args={[VISUAL_RADIUS[trajectory.id], 32, 24]} />
+        <sphereGeometry
+          args={[
+            VISUAL_RADIUS[trajectory.id === "earth" ? "earth" : "asteroid"],
+            32,
+            24,
+          ]}
+        />
         <meshStandardMaterial
           color={color}
           emissive={color}
@@ -56,7 +67,7 @@ function Body({
     </group>
   );
 }
-function Trajectory({
+const Trajectory = memo(function Trajectory({
   data,
   selected,
 }: {
@@ -67,13 +78,14 @@ function Trajectory({
   return (
     <Line
       points={points}
-      color={COLORS[data.id]}
+      color={objectColor(data.id)}
       transparent
       opacity={selected ? 0.5 : 0.22}
       lineWidth={selected ? 1.1 : 0.8}
     />
   );
-}
+});
+
 function Sun() {
   return (
     <group>
@@ -218,11 +230,10 @@ export default function OrbitScene({
           >
             <button
               className={`body-label ${selected === object.id ? "selected" : ""}`}
-              style={{ color: COLORS[object.id] }}
+              style={{ color: objectColor(object.id) }}
               onClick={() => onSelect(object.id)}
             >
-              <span>{object.id === "earth" ? "Earth" : "Apophis"}</span>
-              <small>{object.id === "earth" ? "399" : "99942"}</small>
+              <span>{object.name}</span>
             </button>
           </div>
         ))}

@@ -1,15 +1,20 @@
 "use client";
 import dynamic from "next/dynamic";
-import { useState } from "react";
+import Link from "next/link";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   CircleHelp,
   Compass,
+  Contrast,
   Globe2,
   Maximize2,
   Orbit,
   RotateCcw,
 } from "lucide-react";
 import { useTrajectories } from "@/hooks/useTrajectories";
+import { useNeoDiscovery } from "@/hooks/useNeoDiscovery";
+import { DiscoveryPanel } from "./discovery/DiscoveryPanel";
+import { utcDate } from "@/lib/astronomy/time";
 import { useSimulation } from "@/hooks/useSimulation";
 import type { ObjectId, TrajectoryDataset } from "@/models/trajectory";
 import { ObjectPanel } from "./ObjectPanel";
@@ -22,10 +27,32 @@ const OrbitScene = dynamic(() => import("./space/OrbitScene"), {
 });
 function Workspace({ data }: { data: TrajectoryDataset }) {
   const simulation = useSimulation(data.range);
-  const [selected, setSelected] = useState<ObjectId>("apophis");
+  const [selected, setSelected] = useState<ObjectId>("earth");
   const [view, setView] = useState(0);
   const [help, setHelp] = useState(false);
-  const object = data.objects.find((item) => item.id === selected)!;
+  const manager = useNeoDiscovery(data.range);
+  const earth = data.objects[0];
+  const selectedEntry = manager.store[selected];
+  const object = selected === "earth" ? earth : selectedEntry?.trajectory;
+  const sceneData = useMemo(
+    () => ({
+      ...data,
+      objects: [
+        earth,
+        ...Object.values(manager.store).flatMap((entry) =>
+          entry?.trajectory && entry.visible ? [entry.trajectory] : [],
+        ),
+      ],
+    }),
+    [data, earth, manager.store],
+  );
+  const timeRef = useRef(simulation.time);
+  useEffect(() => {
+    timeRef.current = simulation.time;
+  }, [simulation.time]);
+  const getSimulationDate = useCallback(() => utcDate(timeRef.current), []);
+  const effectiveSelected =
+    selected === "earth" || selectedEntry ? selected : "earth";
   return (
     <>
       <div className="view-heading">
@@ -47,37 +74,39 @@ function Workspace({ data }: { data: TrajectoryDataset }) {
         aria-label="Interactive 3D heliocentric map. Drag to orbit, scroll to zoom, right-drag to pan."
       >
         <OrbitScene
-          data={data}
+          data={sceneData}
           time={simulation.time}
-          selected={selected}
+          selected={effectiveSelected}
           onSelect={setSelected}
           view={view}
         />
       </div>
-      <div className="objects-list">
-        <span className="eyebrow">
-          IN VIEW <span className="count">03</span>
+      <div className="base-objects">
+        <span>
+          <span className="legend-dot sun" /> Sun
         </span>
-        <div className="sun-item">
-          <span className="legend-dot sun" />
-          Sun <span className="list-note">ORIGIN</span>
-        </div>
-        {data.objects.map((item) => (
-          <button
-            key={item.id}
-            className={`object-item ${selected === item.id ? "active" : ""}`}
-            onClick={() => setSelected(item.id)}
-            aria-pressed={selected === item.id}
-          >
-            <span className={`legend-dot ${item.id}`} />
-            {item.id === "earth" ? "Earth" : "Apophis"}
-            <span className="list-note">
-              {item.id === "earth" ? "PLANET" : "NEO"}
-            </span>
-          </button>
-        ))}
+        <button
+          onClick={() => setSelected("earth")}
+          aria-pressed={effectiveSelected === "earth"}
+        >
+          <span className="legend-dot earth" /> Earth
+        </button>
+        <span>{sceneData.objects.length - 1} NEOs visible</span>
       </div>
-      <ObjectPanel object={object} time={simulation.time} />
+      <DiscoveryPanel
+        manager={manager}
+        range={data.range}
+        selected={effectiveSelected}
+        onSelect={setSelected}
+        getSimulationDate={getSimulationDate}
+      />
+      <ObjectPanel
+        object={effectiveSelected === "earth" ? earth : object}
+        entry={effectiveSelected === "earth" ? undefined : selectedEntry}
+        earth={earth}
+        time={simulation.time}
+        onAdd={manager.add}
+      />
       <div className="view-tools">
         <button
           className="icon-button"
@@ -137,7 +166,7 @@ function Workspace({ data }: { data: TrajectoryDataset }) {
               ? "PLAYING FORWARD"
               : "PLAYING BACKWARD"
             : "SIMULATION PAUSED"}
-          <span className="footer-divider">/</span>PHASE 01
+          <span className="footer-divider">/</span>STAGE 02
         </span>
       </footer>
     </>
@@ -145,21 +174,32 @@ function Workspace({ data }: { data: TrajectoryDataset }) {
 }
 export default function Observatory() {
   const { data, error, retry } = useTrajectories();
+  const [monochrome, setMonochrome] = useState(false);
   return (
-    <main className="observatory">
+    <main className={`observatory${monochrome ? " monochrome" : ""}`}>
       <header>
-        <a className="brand" href="/" aria-label="Nearby home">
+        <Link className="brand" href="/" aria-label="Nearby home">
           <span className="brand-mark">
             <Orbit size={25} strokeWidth={1.3} />
           </span>
           nearby
           <span className="brand-divider" />
           <span className="brand-description">ORBITAL OBSERVATORY</span>
-        </a>
+        </Link>
         <div className="header-meta">
           <Globe2 size={14} />
           <span>EARTH & NEAR-EARTH OBJECTS</span>
-          <span className="phase">EXPLORER / 01</span>
+          <span className="phase">EXPLORER / 02</span>
+          <button
+            className="monochrome-toggle"
+            aria-label="Black and white mode"
+            aria-pressed={monochrome}
+            title={monochrome ? "Restore color" : "Switch to black and white"}
+            onClick={() => setMonochrome((enabled) => !enabled)}
+          >
+            <Contrast size={15} aria-hidden="true" />
+            <span>B&W</span>
+          </button>
         </div>
       </header>
       {data ? (
@@ -178,8 +218,7 @@ export default function Observatory() {
               : "Loading trajectory data…"}
           </h1>
           <p>
-            {error ??
-              "Retrieving Earth and Apophis vector samples from NASA/JPL Horizons."}
+            {error ?? "Retrieving Earth vector samples from NASA/JPL Horizons."}
           </p>
           {error ? (
             <button className="retry-button" onClick={retry}>

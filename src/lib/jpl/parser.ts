@@ -14,12 +14,21 @@ export function extractResult(payload: unknown): string {
   if (!("result" in payload) || typeof payload.result !== "string")
     throw new HorizonsError("JPL response is missing its result field.");
   if (
-    /Multiple major-bodies match|Matching small-bodies|matches found|Record #\s+Epoch-yr/i.test(
+    /Multiple major-bodies match|Matching small-bodies|(?<!No )matches found|Record #\s+Epoch-yr/i.test(
       payload.result,
     )
   ) {
     throw new HorizonsError(
       "JPL returned an ambiguous object match. A unique designation is required.",
+    );
+  }
+  if (
+    /No matches found|No match found|Cannot find|Unknown target|No such object/i.test(
+      payload.result,
+    )
+  ) {
+    throw new HorizonsError(
+      "Horizons could not find this asteroid. Its designation may not yet be available in JPL.",
     );
   }
   return payload.result;

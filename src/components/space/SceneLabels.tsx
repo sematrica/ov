@@ -36,16 +36,21 @@ export function LabelProjection({
       vector.set(...point).project(camera);
       const x = ((vector.x + 1) * size.width) / 2;
       const y = ((1 - vector.y) * size.height) / 2;
-      element.style.visibility =
+      element.style.setProperty(
+        "visibility",
         vector.z < -1 ||
-        vector.z > 1 ||
-        x < 0 ||
-        x > size.width ||
-        y < 0 ||
-        y > size.height
+          vector.z > 1 ||
+          x < 0 ||
+          x > size.width ||
+          y < 0 ||
+          y > size.height
           ? "hidden"
-          : "visible";
-      element.style.transform = `translate3d(${x + (id === "sun" ? -12 : 18)}px, ${y - 10}px, 0)`;
+          : "visible",
+      );
+      element.style.setProperty(
+        "transform",
+        `translate3d(${x + (id === "sun" ? -12 : 18)}px, ${y - 10}px, 0)`,
+      );
     }
   });
   return null;

@@ -1,6 +1,7 @@
 import "server-only";
+import { AsyncCache, SerialQueue } from "../cache/asyncCache";
+import type { HorizonsTarget } from "./resolver";
 import type {
-  ObjectId,
   SpaceObjectTrajectory,
   TrajectoryDataset,
   TimeRange,
@@ -8,24 +9,29 @@ import type {
 import { initialRange, utcDate } from "../astronomy/time";
 import { extractResult, HorizonsError, parseVectors } from "./parser";
 const ENDPOINT = "https://ssd.jpl.nasa.gov/api/horizons.api";
-const TARGETS: {
-  id: ObjectId;
-  name: string;
-  command: string;
-  identity: RegExp;
-}[] = [
-  { id: "earth", name: "Earth", command: "399", identity: /^Earth\s*\(399\)/ },
-  // Exact provisional designation verified against JPL: 99942 Apophis (2004 MN4).
-  {
-    id: "apophis",
-    name: "99942 Apophis",
-    command: "DES=2004 MN4;",
-    identity: /^99942 Apophis\s*\(2004 MN4\)/,
-  },
-];
+const EARTH: HorizonsTarget = {
+  id: "earth",
+  name: "Earth",
+  command: "399",
+  identity: /^Earth\s*\(399\)/,
+};
+const trajectoryCache = new AsyncCache<SpaceObjectTrajectory>(
+  6 * 3_600_000,
+  64,
+);
+const jplQueue = new SerialQueue();
+export function getObjectTrajectory(
+  target: HorizonsTarget,
+  range: TimeRange,
+): Promise<SpaceObjectTrajectory> {
+  return trajectoryCache.get(
+    `${target.id}:${target.command}:${range.start}:${range.end}:6h`,
+    () => jplQueue.run(() => new HorizonsService().trajectory(target, range)),
+  );
+}
 export class HorizonsService {
   async trajectory(
-    target: (typeof TARGETS)[number],
+    target: HorizonsTarget,
     range: TimeRange,
   ): Promise<SpaceObjectTrajectory> {
     const params = new URLSearchParams({ format: "json" });
@@ -79,8 +85,7 @@ export class HorizonsService {
   async dataset(range: TimeRange): Promise<TrajectoryDataset> {
     const objects: SpaceObjectTrajectory[] = [];
     // JPL asks clients to submit API requests sequentially.
-    for (const target of TARGETS)
-      objects.push(await this.trajectory(target, range));
+    objects.push(await getObjectTrajectory(EARTH, range));
     return {
       range,
       objects,

@@ -6,10 +6,12 @@ export function useTrajectories() {
   const [data, setData] = useState<TrajectoryDataset | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [attempt, setAttempt] = useState(0);
-  const retry = useCallback(() => setAttempt((n) => n + 1), []);
+  const retry = useCallback(() => {
+    setError(null);
+    setAttempt((n) => n + 1);
+  }, []);
   useEffect(() => {
     const controller = new AbortController();
-    setError(null);
     async function load() {
       try {
         const response = await fetch("/api/trajectories", {

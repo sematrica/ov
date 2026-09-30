@@ -1,0 +1,611 @@
+{
+  "earth": {
+    "range": {
+      "start": 1790467200000,
+      "end": 1790553600000
+    },
+    "objects": [
+      {
+        "id": "earth",
+        "name": "Earth",
+        "target": "Earth (399)                     {source: DE441}",
+        "points": [
+          {
+            "time": 1790467200000,
+            "x": 1.000531665888323,
+            "y": 0.06194754696126398,
+            "z": -1.153587990609915e-5,
+            "vx": -0.001340993382843505,
+            "vy": 0.01709977440594407,
+            "vz": -1.530474610160084e-6
+          },
+          {
+            "time": 1790488800000,
+            "x": 1.000187286034499,
+            "y": 0.06622191647594176,
+            "z": -1.191533970986285e-5,
+            "vx": -0.001414044158267989,
+            "vy": 0.01709513347538519,
+            "vz": -1.504884823922941e-6
+          },
+          {
+            "time": 1790510400000,
+            "x": 0.9998246444417168,
+            "y": 0.07049508958092324,
+            "z": -1.228816584766435e-5,
+            "vx": -0.001487087344712913,
+            "vy": 0.01709020312974307,
+            "vz": -1.477417748080758e-6
+          },
+          {
+            "time": 1790532000000,
+            "x": 0.9994437429685392,
+            "y": 0.07476699391868294,
+            "z": -1.265389878811407e-5,
+            "vx": -0.001560123255431904,
+            "vy": 0.01708498331970004,
+            "vz": -1.448153473019522e-6
+          },
+          {
+            "time": 1790553600000,
+            "x": 0.9990445833928052,
+            "y": 0.07903755710475345,
+            "z": -1.301210033654578e-5,
+            "vx": -0.001633152221152062,
+            "vy": 0.01707947387818544,
+            "vz": -1.41718256741011e-6
+          }
+        ]
+      }
+    ],
+    "fetchedAt": "2026-09-28T02:34:59.452Z",
+    "source": "NASA/JPL Horizons",
+    "frame": "Heliocentric \u00b7 J2000 ecliptic",
+    "units": "AU",
+    "timeScale": "UTC",
+    "stepHours": 6
+  },
+  "discovery": {
+    "date": "2026-09-27",
+    "window": {
+      "start": "2026-09-26",
+      "end": "2026-09-28"
+    },
+    "objects": [
+      {
+        "id": "neo:2376848",
+        "nasaId": "2376848",
+        "name": "376848 (2001 RY47)",
+        "nasaJplUrl": "https://ssd.jpl.nasa.gov/tools/sbdb_lookup.html#/?sstr=2376848",
+        "absoluteMagnitude": 19.61,
+        "estimatedDiameterMeters": {
+          "min": 318.0936332215,
+          "max": 711.2789870931
+        },
+        "potentiallyHazardous": false,
+        "closeApproaches": [
+          {
+            "time": 1790382720000,
+            "timePrecision": "minute",
+            "orbitingBody": "Earth",
+            "missDistanceKm": 19724592.195650574,
+            "missDistanceLunar": 51.2899439284,
+            "relativeVelocityKmPerSecond": 12.0505623546
+          }
+        ]
+      },
+      {
+        "id": "neo:3092330",
+        "nasaId": "3092330",
+        "name": "(2001 SY169)",
+        "nasaJplUrl": "https://ssd.jpl.nasa.gov/tools/sbdb_lookup.html#/?sstr=3092330",
+        "absoluteMagnitude": 23.1,
+        "estimatedDiameterMeters": {
+          "min": 63.7609789875,
+          "max": 142.5738833281
+        },
+        "potentiallyHazardous": false,
+        "closeApproaches": [
+          {
+            "time": 1790420280000,
+            "timePrecision": "minute",
+            "orbitingBody": "Earth",
+            "missDistanceKm": 70322607.8143903,
+            "missDistanceLunar": 182.8601867112,
+            "relativeVelocityKmPerSecond": 25.869866957
+          }
+        ]
+      },
+      {
+        "id": "neo:3291224",
+        "nasaId": "3291224",
+        "name": "(2005 SP9)",
+        "nasaJplUrl": "https://ssd.jpl.nasa.gov/tools/sbdb_lookup.html#/?sstr=3291224",
+        "absoluteMagnitude": 21.61,
+        "estimatedDiameterMeters": {
+          "min": 126.6353562929,
+          "max": 283.1652650258
+        },
+        "potentiallyHazardous": false,
+        "closeApproaches": [
+          {
+            "time": 1790415420000,
+            "timePrecision": "minute",
+            "orbitingBody": "Earth",
+            "missDistanceKm": 56699114.96312618,
+            "missDistanceLunar": 147.4349582695,
+            "relativeVelocityKmPerSecond": 16.5300508984
+          }
+        ]
+      },
+      {
+        "id": "neo:3427460",
+        "nasaId": "3427460",
+        "name": "(2008 ST)",
+        "nasaJplUrl": "https://ssd.jpl.nasa.gov/tools/sbdb_lookup.html#/?sstr=3427460",
+        "absoluteMagnitude": 27.1,
+        "estimatedDiameterMeters": {
+          "min": 10.1054341542,
+          "max": 22.5964377109
+        },
+        "potentiallyHazardous": false,
+        "closeApproaches": [
+          {
+            "time": 1790466840000,
+            "timePrecision": "minute",
+            "orbitingBody": "Earth",
+            "missDistanceKm": 14878930.159093497,
+            "missDistanceLunar": 38.6897476006,
+            "relativeVelocityKmPerSecond": 6.1640876924
+          }
+        ]
+      },
+      {
+        "id": "neo:3629117",
+        "nasaId": "3629117",
+        "name": "(2013 ET)",
+        "nasaJplUrl": "https://ssd.jpl.nasa.gov/tools/sbdb_lookup.html#/?sstr=3629117",
+        "absoluteMagnitude": 23.1,
+        "estimatedDiameterMeters": {
+          "min": 63.7609789875,
+          "max": 142.5738833281
+        },
+        "potentiallyHazardous": false,
+        "closeApproaches": [
+          {
+            "time": 1790420460000,
+            "timePrecision": "minute",
+            "orbitingBody": "Earth",
+            "missDistanceKm": 70330127.72532052,
+            "missDistanceLunar": 182.8797407687,
+            "relativeVelocityKmPerSecond": 25.8713848901
+          }
+        ]
+      },
+      {
+        "id": "neo:3717039",
+        "nasaId": "3717039",
+        "name": "(2015 HA10)",
+        "nasaJplUrl": "https://ssd.jpl.nasa.gov/tools/sbdb_lookup.html#/?sstr=3717039",
+        "absoluteMagnitude": 20.61,
+        "estimatedDiameterMeters": {
+          "min": 200.7035141135,
+          "max": 448.7867008808
+        },
+        "potentiallyHazardous": false,
+        "closeApproaches": [
+          {
+            "time": 1790458380000,
+            "timePrecision": "minute",
+            "orbitingBody": "Earth",
+            "missDistanceKm": 38850386.1696524,
+            "missDistanceLunar": 101.0228302047,
+            "relativeVelocityKmPerSecond": 15.4515027616
+          }
+        ]
+      },
+      {
+        "id": "neo:3830851",
+        "nasaId": "3830851",
+        "name": "(2018 SD1)",
+        "nasaJplUrl": "https://ssd.jpl.nasa.gov/tools/sbdb_lookup.html#/?sstr=3830851",
+        "absoluteMagnitude": 24.6,
+        "estimatedDiameterMeters": {
+          "min": 31.9561886721,
+          "max": 71.4562101727
+        },
+        "potentiallyHazardous": false,
+        "closeApproaches": [
+          {
+            "time": 1790434680000,
+            "timePrecision": "minute",
+            "orbitingBody": "Earth",
+            "missDistanceKm": 35828309.58721446,
+            "missDistanceLunar": 93.164511162,
+            "relativeVelocityKmPerSecond": 22.8074917582
+          }
+        ]
+      },
+      {
+        "id": "neo:3843612",
+        "nasaId": "3843612",
+        "name": "(2019 QY1)",
+        "nasaJplUrl": "https://ssd.jpl.nasa.gov/tools/sbdb_lookup.html#/?sstr=3843612",
+        "absoluteMagnitude": 20.77,
+        "estimatedDiameterMeters": {
+          "min": 186.44681832,
+          "max": 416.9077599521
+        },
+        "potentiallyHazardous": true,
+        "closeApproaches": [
+          {
+            "time": 1790390940000,
+            "timePrecision": "minute",
+            "orbitingBody": "Earth",
+            "missDistanceKm": 74134162.95081787,
+            "missDistanceLunar": 192.7713903137,
+            "relativeVelocityKmPerSecond": 20.0345827649
+          }
+        ]
+      },
+      {
+        "id": "neo:2523934",
+        "nasaId": "2523934",
+        "name": "523934 (1998 FF14)",
+        "nasaJplUrl": "https://ssd.jpl.nasa.gov/tools/sbdb_lookup.html#/?sstr=2523934",
+        "absoluteMagnitude": 20.61,
+        "estimatedDiameterMeters": {
+          "min": 200.7035141135,
+          "max": 448.7867008808
+        },
+        "potentiallyHazardous": true,
+        "closeApproaches": [
+          {
+            "time": 1790601540000,
+            "timePrecision": "minute",
+            "orbitingBody": "Earth",
+            "missDistanceKm": 15393500.935266983,
+            "missDistanceLunar": 40.0277882554,
+            "relativeVelocityKmPerSecond": 23.4785426105
+          }
+        ]
+      },
+      {
+        "id": "neo:3256319",
+        "nasaId": "3256319",
+        "name": "(2004 TB10)",
+        "nasaJplUrl": "https://ssd.jpl.nasa.gov/tools/sbdb_lookup.html#/?sstr=3256319",
+        "absoluteMagnitude": 21.5,
+        "estimatedDiameterMeters": {
+          "min": 133.2155666981,
+          "max": 297.8790627982
+        },
+        "potentiallyHazardous": true,
+        "closeApproaches": [
+          {
+            "time": 1790603580000,
+            "timePrecision": "minute",
+            "orbitingBody": "Earth",
+            "missDistanceKm": 35666461.52163483,
+            "missDistanceLunar": 92.7436569245,
+            "relativeVelocityKmPerSecond": 11.5723191742
+          }
+        ]
+      },
+      {
+        "id": "neo:3691093",
+        "nasaId": "3691093",
+        "name": "(2014 SQ260)",
+        "nasaJplUrl": "https://ssd.jpl.nasa.gov/tools/sbdb_lookup.html#/?sstr=3691093",
+        "absoluteMagnitude": 24.02,
+        "estimatedDiameterMeters": {
+          "min": 41.7402433392,
+          "max": 93.3340215038
+        },
+        "potentiallyHazardous": false,
+        "closeApproaches": [
+          {
+            "time": 1790596800000,
+            "timePrecision": "minute",
+            "orbitingBody": "Earth",
+            "missDistanceKm": 39365623.793291196,
+            "missDistanceLunar": 102.3626048659,
+            "relativeVelocityKmPerSecond": 12.3118504896
+          }
+        ]
+      },
+      {
+        "id": "neo:3713318",
+        "nasaId": "3713318",
+        "name": "(2015 EQ7)",
+        "nasaJplUrl": "https://ssd.jpl.nasa.gov/tools/sbdb_lookup.html#/?sstr=3713318",
+        "absoluteMagnitude": 23.6,
+        "estimatedDiameterMeters": {
+          "min": 50.6471458835,
+          "max": 113.2504610618
+        },
+        "potentiallyHazardous": false,
+        "closeApproaches": [
+          {
+            "time": 1790589180000,
+            "timePrecision": "minute",
+            "orbitingBody": "Earth",
+            "missDistanceKm": 29487898.560108572,
+            "missDistanceLunar": 76.6775124531,
+            "relativeVelocityKmPerSecond": 6.2859743336
+          }
+        ]
+      },
+      {
+        "id": "neo:3748418",
+        "nasaId": "3748418",
+        "name": "(2016 FL12)",
+        "nasaJplUrl": "https://ssd.jpl.nasa.gov/tools/sbdb_lookup.html#/?sstr=3748418",
+        "absoluteMagnitude": 26.3,
+        "estimatedDiameterMeters": {
+          "min": 14.6067964271,
+          "max": 32.6617897446
+        },
+        "potentiallyHazardous": false,
+        "closeApproaches": [
+          {
+            "time": 1790578620000,
+            "timePrecision": "minute",
+            "orbitingBody": "Earth",
+            "missDistanceKm": 63605339.886157274,
+            "missDistanceLunar": 165.3932453431,
+            "relativeVelocityKmPerSecond": 7.3029112882
+          }
+        ]
+      },
+      {
+        "id": "neo:3773752",
+        "nasaId": "3773752",
+        "name": "(2017 GK4)",
+        "nasaJplUrl": "https://ssd.jpl.nasa.gov/tools/sbdb_lookup.html#/?sstr=3773752",
+        "absoluteMagnitude": 21.79,
+        "estimatedDiameterMeters": {
+          "min": 116.5614594686,
+          "max": 260.6393469284
+        },
+        "potentiallyHazardous": true,
+        "closeApproaches": [
+          {
+            "time": 1790555880000,
+            "timePrecision": "minute",
+            "orbitingBody": "Earth",
+            "missDistanceKm": 18423686.14113296,
+            "missDistanceLunar": 47.9071921873,
+            "relativeVelocityKmPerSecond": 12.1676168651
+          }
+        ]
+      },
+      {
+        "id": "neo:3692560",
+        "nasaId": "3692560",
+        "name": "(2014 TU)",
+        "nasaJplUrl": "https://ssd.jpl.nasa.gov/tools/sbdb_lookup.html#/?sstr=3692560",
+        "absoluteMagnitude": 25.09,
+        "estimatedDiameterMeters": {
+          "min": 25.5008687857,
+          "max": 57.0216760901
+        },
+        "potentiallyHazardous": false,
+        "closeApproaches": [
+          {
+            "time": 1790504340000,
+            "timePrecision": "minute",
+            "orbitingBody": "Earth",
+            "missDistanceKm": 40650768.30598433,
+            "missDistanceLunar": 105.7043718004,
+            "relativeVelocityKmPerSecond": 15.5811895497
+          }
+        ]
+      },
+      {
+        "id": "neo:3838859",
+        "nasaId": "3838859",
+        "name": "(2019 DJ1)",
+        "nasaJplUrl": "https://ssd.jpl.nasa.gov/tools/sbdb_lookup.html#/?sstr=3838859",
+        "absoluteMagnitude": 26.8,
+        "estimatedDiameterMeters": {
+          "min": 11.6025908209,
+          "max": 25.9441817907
+        },
+        "potentiallyHazardous": false,
+        "closeApproaches": [
+          {
+            "time": 1790473980000,
+            "timePrecision": "minute",
+            "orbitingBody": "Earth",
+            "missDistanceKm": 42105242.557971746,
+            "missDistanceLunar": 109.4864476015,
+            "relativeVelocityKmPerSecond": 12.3662936673
+          }
+        ]
+      },
+      {
+        "id": "neo:3872621",
+        "nasaId": "3872621",
+        "name": "(2019 SH7)",
+        "nasaJplUrl": "https://ssd.jpl.nasa.gov/tools/sbdb_lookup.html#/?sstr=3872621",
+        "absoluteMagnitude": 23.29,
+        "estimatedDiameterMeters": {
+          "min": 58.4191154186,
+          "max": 130.6291132614
+        },
+        "potentiallyHazardous": false,
+        "closeApproaches": [
+          {
+            "time": 1790488200000,
+            "timePrecision": "minute",
+            "orbitingBody": "Earth",
+            "missDistanceKm": 32446692.879890166,
+            "missDistanceLunar": 84.3712783496,
+            "relativeVelocityKmPerSecond": 9.5902213908
+          }
+        ]
+      }
+    ],
+    "demoKey": true,
+    "fetchedAt": "2026-09-28T02:35:00.867Z"
+  },
+  "trajectories": {
+    "neo:3773752": {
+      "id": "neo:3773752",
+      "name": "(2017 GK4)",
+      "target": "(2017 GK4)                      {source: JPL#36}",
+      "points": [
+        {
+          "time": 1790467200000,
+          "x": 1.049425301181877,
+          "y": 0.1424285087825983,
+          "z": 0.07967606220413,
+          "vx": 0.004245616585638887,
+          "vy": 0.01724620806940816,
+          "vz": -0.004195979833743762
+        },
+        {
+          "time": 1790488800000,
+          "x": 1.050478612476033,
+          "y": 0.1467389505190957,
+          "z": 0.07862645455519793,
+          "vx": 0.004180910061029122,
+          "vy": 0.01723728804164105,
+          "vz": -0.004200867006816737
+        },
+        {
+          "time": 1790510400000,
+          "x": 1.051515774362245,
+          "y": 0.1510471340057245,
+          "z": 0.07757563585169819,
+          "vx": 0.004116421335374019,
+          "vy": 0.01722814244618505,
+          "vz": -0.004205668369355304
+        },
+        {
+          "time": 1790532000000,
+          "x": 1.052536841299533,
+          "y": 0.1553530031316644,
+          "z": 0.0765236274720659,
+          "vx": 0.004052150480172812,
+          "vy": 0.01721877352908339,
+          "vz": -0.004210384514531882
+        },
+        {
+          "time": 1790553600000,
+          "x": 1.053541867762765,
+          "y": 0.1596565023456193,
+          "z": 0.07547045064673191,
+          "vx": 0.003988097550768774,
+          "vy": 0.01720918352048173,
+          "vz": -0.004215016033206363
+        }
+      ]
+    },
+    "neo:3427460": {
+      "id": "neo:3427460",
+      "name": "(2008 ST)",
+      "target": "(2008 ST)                       {source: JPL#14}",
+      "points": [
+        {
+          "time": 1790467200000,
+          "x": 0.9787303656169791,
+          "y": 0.1589826982029333,
+          "z": -0.001049033919546581,
+          "vx": -0.004772152842434108,
+          "vy": 0.01632351033558656,
+          "vz": -0.0005482949906082033
+        },
+        {
+          "time": 1790488800000,
+          "x": 0.9775280431182862,
+          "y": 0.1630620511378794,
+          "z": -0.001186097257875589,
+          "vx": -0.004846431514652541,
+          "vy": 0.01631125828855235,
+          "vz": -0.0005482099537820175
+        },
+        {
+          "time": 1790510400000,
+          "x": 0.9763071477289765,
+          "y": 0.1671382998842535,
+          "z": -0.001323138013950284,
+          "vx": -0.004920735756174596,
+          "vy": 0.01629867669109534,
+          "vz": -0.0005481143272773928
+        },
+        {
+          "time": 1790532000000,
+          "x": 0.9750676732154875,
+          "y": 0.1712113619526102,
+          "z": -0.001460153536381043,
+          "vx": -0.004995064295387773,
+          "vy": 0.01628576472870483,
+          "vz": -0.0005480080793369996
+        },
+        {
+          "time": 1790553600000,
+          "x": 0.9738096136632693,
+          "y": 0.1752811546501092,
+          "z": -0.001597141165843988,
+          "vx": -0.005069415851826427,
+          "vy": 0.01627252158886515,
+          "vz": -0.0005478911782500167
+        }
+      ]
+    },
+    "neo:2523934": {
+      "id": "neo:2523934",
+      "name": "523934 (1998 FF14)",
+      "target": "523934 (1998 FF14)              {source: JPL#42}",
+      "points": [
+        {
+          "time": 1790467200000,
+          "x": 0.9640716133939506,
+          "y": -0.03347672371189244,
+          "z": -0.02435175313973079,
+          "vx": 0.00502525357788077,
+          "vy": 0.01463738964032673,
+          "vz": 0.01173658265321785
+        },
+        {
+          "time": 1790488800000,
+          "x": 0.9653180120455471,
+          "y": -0.02981704252422628,
+          "z": -0.02141736662614538,
+          "vx": 0.004945961887122706,
+          "vy": 0.0146400083797817,
+          "vz": 0.01173846814126208
+        },
+        {
+          "time": 1790510400000,
+          "x": 0.9665446075451201,
+          "y": -0.02615674518517364,
+          "z": -0.01848253966372416,
+          "vx": 0.004866828688069921,
+          "vy": 0.01464231916550753,
+          "vz": 0.01174010649755786
+        },
+        {
+          "time": 1790532000000,
+          "x": 0.9677514397590576,
+          "y": -0.02249590844763773,
+          "z": -0.01554733384485564,
+          "vx": 0.00478785592310543,
+          "vy": 0.01464432388151541,
+          "vz": 0.01174149924767704
+        },
+        {
+          "time": 1790553600000,
+          "x": 0.9689385490353851,
+          "y": -0.01883460859368682,
+          "z": -0.01261181037964338,
+          "vx": 0.004709045502991066,
+          "vy": 0.0146460244103117,
+          "vz": 0.01174264792421533
+        }
+      ]
+    }
+  }
+}

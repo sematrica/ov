@@ -107,6 +107,36 @@ header {
   letter-spacing: 1.5px;
   color: var(--muted);
 }
+.observatory.monochrome {
+  filter: grayscale(1);
+}
+body:has(.observatory.monochrome) {
+  background: #0b0b0b;
+}
+.monochrome-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 36px;
+  padding: 7px 10px;
+  border: 1px solid #ffffff20;
+  border-radius: 3px;
+  background: transparent;
+  color: var(--muted);
+  font-size: 10px;
+  letter-spacing: 1px;
+  cursor: pointer;
+}
+.monochrome-toggle:hover {
+  background: #ffffff0d;
+  color: var(--text);
+}
+.monochrome-toggle[aria-pressed="true"] {
+  background: #ffffff1a;
+  border-color: #ffffff70;
+  color: #fff;
+}
 .phase {
   margin-left: 23px;
   border: 1px solid #ffffff20;
@@ -1078,4 +1108,485 @@ footer .live-dot {
 }
 .projected-label .body-label {
   pointer-events: auto;
+}
+
+/* Stage 2: explicit discovery, independent trajectory loading, shared selection. */
+.observatory:has(.discovery-panel) .view-heading {
+  top: 107px;
+}
+.observatory:has(.discovery-panel) .view-heading h1 {
+  font-size: 22px;
+}
+.observatory:has(.discovery-panel) .frame-label {
+  margin-top: 12px;
+}
+.base-objects {
+  position: absolute;
+  left: 40px;
+  top: 231px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  z-index: 12;
+  font-size: 12px;
+  color: var(--muted);
+}
+.base-objects button {
+  background: transparent;
+  border: 0;
+  padding: 8px 0;
+}
+.base-objects .legend-dot {
+  margin-right: 6px;
+}
+.base-objects button[aria-pressed="true"] {
+  color: var(--blue);
+}
+.discovery-panel {
+  position: absolute;
+  top: 280px;
+  bottom: 303px;
+  left: 39px;
+  width: 287px;
+  z-index: 12;
+  background: #10161eeb;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  display: flex;
+  flex-direction: column;
+  backdrop-filter: blur(12px);
+}
+.discovery-panel.collapsed {
+  bottom: auto;
+}
+.discovery-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  border: 0;
+  background: transparent;
+  padding: 17px;
+  color: #d5dce5;
+  font-size: 11px;
+  letter-spacing: 1.5px;
+}
+.discovery-heading small {
+  color: var(--accent);
+  margin-left: 12px;
+}
+.discovery-content {
+  overflow-y: auto;
+  padding: 0 16px 16px;
+  scrollbar-width: thin;
+}
+.date-label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 12px;
+  color: #c1cad6;
+}
+.discovery-panel input,
+.discovery-panel select {
+  color: #d7dfe9;
+  border: 1px solid #ffffff20;
+  background: #0b1017;
+  border-radius: 4px;
+  padding: 8px;
+  min-width: 0;
+  width: 100%;
+  font-size: 12px;
+}
+.use-time {
+  border: 0;
+  padding: 8px 0;
+  background: transparent;
+  color: #aab7c7;
+  font-size: 11px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.discover-button {
+  padding: 10px;
+  border: 1px solid #d1ab7050;
+  border-radius: 4px;
+  background: #d1ab7010;
+  color: var(--accent);
+  font-size: 12px;
+  width: 100%;
+}
+.discovery-hint,
+.classification-note,
+.demo-key-note {
+  color: #9da9b8;
+  font-size: 11px;
+  line-height: 1.6;
+}
+.discovery-window {
+  font-size: 9px;
+  letter-spacing: 1px;
+  color: #8c99a9;
+  border-top: 1px solid var(--border);
+  margin-top: 15px;
+  padding-top: 15px;
+}
+.discovery-window span {
+  display: block;
+  font-family: monospace;
+  font-size: 11px;
+  margin-top: 6px;
+  color: #c0cad7;
+  letter-spacing: 0;
+}
+.demo-key-note {
+  color: #c7b696;
+}
+.discovery-filters {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin: 15px 0;
+}
+.discovery-filters label {
+  font-size: 11px;
+  color: #aab6c5;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.discovery-filters .diameter-filter {
+  grid-column: 1 / -1;
+  flex-direction: row;
+  align-items: center;
+}
+.diameter-filter input {
+  width: 85px;
+  margin-left: auto;
+}
+.neo-row {
+  border: 1px solid #ffffff12;
+  border-radius: 5px;
+  padding: 11px;
+  margin-top: 10px;
+}
+.neo-row.selected {
+  border-color: #d1ab7060;
+  background: #e7b77905;
+}
+.neo-name {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 7px;
+  text-align: left;
+  width: 100%;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  font-size: 13px;
+  color: #e3e6eb;
+  line-height: 1.4;
+}
+.neo-state {
+  font-size: 8px;
+  letter-spacing: 1px;
+  color: #9eacbd;
+}
+.neo-approach {
+  font-size: 10px;
+  color: #a4afbd;
+  margin: 8px 0;
+}
+.neo-metrics {
+  margin: 0;
+  font-size: 11px;
+}
+.neo-metrics div {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 7px 0;
+}
+.neo-metrics dt {
+  color: #909cac;
+}
+.neo-metrics dd {
+  margin: 0;
+  text-align: right;
+  color: #c4ceda;
+}
+.hazard-status {
+  font-size: 10px;
+  color: #a1aebd;
+}
+.hazard-status.classified {
+  color: #d8bd95;
+}
+.neo-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+.neo-actions button {
+  background: #ffffff05;
+  border: 1px solid #ffffff20;
+  padding: 6px 8px;
+  border-radius: 3px;
+  color: #d4bd9a;
+  font-size: 11px;
+}
+.neo-actions span {
+  font-size: 11px;
+  color: #b9c6d6;
+}
+.inline-error {
+  color: #e1bba9;
+  font-size: 12px;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+.discovery-message {
+  color: #b3c0d0;
+  font-size: 12px;
+  line-height: 1.6;
+}
+.retained-heading {
+  margin-top: 24px;
+}
+.stage-two-details {
+  top: 107px;
+  width: 275px;
+  max-height: calc(100% - 405px);
+}
+.stage-two-details .object-title {
+  margin-top: 15px;
+}
+.stage-two-details .object-title h2 {
+  font-size: 21px;
+  overflow-wrap: anywhere;
+}
+.stage-two-details .object-designation {
+  font-size: 11px;
+}
+.stage-two-details h3 {
+  font-size: 10px;
+  letter-spacing: 1.1px;
+  font-weight: 400;
+  color: #bac4d1;
+  margin: 0 0 13px;
+}
+.approach-details,
+.position-details {
+  border-top: 1px solid var(--border);
+  padding-top: 16px;
+  margin-top: 18px;
+}
+.approach-details dl {
+  margin: 0;
+}
+.approach-details dl > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 12px;
+  font-size: 11px;
+  line-height: 1.5;
+}
+.approach-details dt {
+  color: #929faf;
+}
+.approach-details dd {
+  margin: 0;
+  text-align: right;
+  color: #d1d9e4;
+  max-width: 60%;
+}
+.position-epoch {
+  color: #aeb9c8;
+  font-family: monospace;
+  font-size: 10px;
+  line-height: 1.5;
+}
+.stage-two-details .distance-reading {
+  margin-top: 12px;
+  padding-top: 0;
+  border: 0;
+}
+.stage-two-details .distance-reading > div {
+  font-size: 28px;
+}
+.stage-two-details .coordinates {
+  padding-top: 16px;
+  margin-top: 16px;
+}
+.earth-distance {
+  font-size: 11px;
+  color: #9aabbd;
+  display: flex;
+  justify-content: space-between;
+}
+.earth-distance strong {
+  font-weight: 400;
+  color: #bed6e9;
+}
+.resolved-target {
+  font-size: 10px;
+  color: #8e9dae;
+  overflow-wrap: anywhere;
+  line-height: 1.6;
+}
+.unloaded-position {
+  font-size: 12px;
+  color: #aab6c5;
+  line-height: 1.7;
+}
+.observatory:has(.discovery-panel) .space-viewport {
+  left: 205px;
+  right: 255px;
+}
+@media (min-width: 721px) {
+  .observatory:has(.discovery-panel) .view-tools {
+    right: 39px;
+  }
+}
+@media (max-width: 1100px) and (min-width: 721px) {
+  .discovery-panel {
+    left: 24px;
+    width: 245px;
+  }
+  .base-objects {
+    left: 25px;
+    font-size: 10px;
+  }
+  .stage-two-details {
+    width: 237px;
+    right: 24px;
+  }
+  .observatory:has(.discovery-panel) .space-viewport {
+    left: 125px;
+    right: 170px;
+  }
+}
+@media (max-width: 720px) {
+  .observatory:has(.discovery-panel) {
+    min-height: 100svh;
+    height: auto;
+    overflow: visible;
+    display: flex;
+    flex-direction: column;
+  }
+  .observatory:has(.discovery-panel) header {
+    flex: 0 0 70px;
+  }
+  .observatory:has(.discovery-panel) .view-heading {
+    position: relative;
+    top: auto;
+    left: auto;
+    margin: 24px 22px 0;
+  }
+  .observatory:has(.discovery-panel) .view-heading h1 {
+    font-size: 22px;
+  }
+  .base-objects {
+    position: relative;
+    top: auto;
+    left: auto;
+    margin: 12px 22px 0;
+  }
+  .observatory:has(.discovery-panel) .space-viewport {
+    position: relative;
+    inset: auto;
+    height: 340px;
+    order: 1;
+  }
+  .discovery-panel {
+    position: relative;
+    inset: auto;
+    width: auto;
+    margin: 0 20px 18px;
+    order: 4;
+    max-height: 550px;
+  }
+  .discovery-panel.collapsed {
+    bottom: auto;
+  }
+  .stage-two-details {
+    position: relative;
+    inset: auto;
+    display: block;
+    width: auto;
+    max-height: none;
+    margin: 0 20px 18px;
+    order: 5;
+  }
+  .stage-two-details .coordinates {
+    border-top: 1px solid var(--border);
+  }
+  .observatory:has(.discovery-panel) .time-panel {
+    position: relative;
+    inset: auto;
+    margin: 15px 20px 20px;
+    order: 3;
+  }
+  .observatory:has(.discovery-panel) .view-tools {
+    position: relative;
+    inset: auto;
+    align-self: flex-end;
+    margin: 0 20px;
+    order: 2;
+  }
+  .observatory:has(.discovery-panel) .scene-caption {
+    display: none;
+  }
+  .observatory:has(.discovery-panel) .help-panel {
+    top: 335px;
+    bottom: auto;
+    right: 20px;
+  }
+  .observatory:has(.discovery-panel) footer {
+    position: relative;
+    inset: auto;
+    padding: 0 22px;
+    order: 6;
+  }
+  .approach-details dl > div {
+    font-size: 13px;
+  }
+  .stage-two-details h3 {
+    font-size: 11px;
+  }
+}
+.filter-disclosure {
+  margin: 13px 0;
+  color: #c2cedc;
+  font-size: 12px;
+}
+.filter-disclosure summary {
+  cursor: pointer;
+  padding: 7px 0;
+}
+@media (min-width: 721px) {
+  .observatory:has(.discovery-panel) .view-heading {
+    left: 351px;
+  }
+  .base-objects {
+    left: 351px;
+  }
+  .discovery-panel {
+    top: 107px;
+  }
+}
+@media (min-width: 721px) and (max-width: 1100px) {
+  .observatory:has(.discovery-panel) .view-heading {
+    left: 290px;
+  }
+  .observatory:has(.discovery-panel) .view-heading h1 {
+    font-size: 20px;
+  }
+  .base-objects {
+    left: 290px;
+  }
 }
