@@ -1,3 +1,4 @@
+import { trajectoryCacheKey } from "../jpl/cacheKey";
 import type { DiscoveryResult } from "../../models/neo";
 import type {
   ObjectId,
@@ -32,7 +33,7 @@ export function loadNeoTrajectory(
   date: string,
   range: TimeRange,
 ): Promise<SpaceObjectTrajectory> {
-  const key = `${id}:${range.start}:${range.end}`;
+  const key = trajectoryCacheKey(id, range, 360, "long-range-asteroid");
   return trajectoryCache.get(key, () =>
     getJson<SpaceObjectTrajectory>(
       `/api/neo-trajectory?${new URLSearchParams({ id, date, start: utcDate(range.start), end: utcDate(range.end) })}`,

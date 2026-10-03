@@ -11,12 +11,16 @@ export function ObjectPanel({
   earth,
   time,
   onAdd,
+  onEncounter,
+  encounterLoading,
 }: {
   object?: SpaceObjectTrajectory;
   entry?: NeoEntry;
   earth: SpaceObjectTrajectory;
   time: number;
   onAdd: (id: ObjectId) => void;
+  onEncounter?: () => void;
+  encounterLoading?: boolean;
 }) {
   const neo = entry?.metadata;
   const point = object ? interpolatePosition(object.points, time) : undefined;
@@ -84,6 +88,20 @@ export function ObjectPanel({
             impact.
           </p>
         </section>
+      )}
+      {neo && (
+        <button
+          className="discover-button"
+          disabled={
+            encounterLoading ||
+            !neo.closeApproaches.some(
+              (a) => a.orbitingBody === "Earth" && Number.isFinite(a.time),
+            )
+          }
+          onClick={onEncounter}
+        >
+          {encounterLoading ? "Preparing encounter…" : "View Close Approach"}
+        </button>
       )}
       <section
         className="position-details"

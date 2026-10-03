@@ -62,8 +62,8 @@ export function useSimulation(range: TimeRange) {
     [direction, range],
   );
   const seek = useCallback(
-    (value: number) => {
-      setClock({ time: clampTime(value, range), playing: false });
+    (value: number, seekRange: TimeRange = range) => {
+      setClock({ time: clampTime(value, seekRange), playing: false });
     },
     [range],
   );

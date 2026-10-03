@@ -8,7 +8,10 @@ export interface TrajectoryPoint {
   vy: number;
   vz: number;
 }
-export type ObjectId = "earth" | `neo:${string}`;
+export type ObjectId =
+  | import("../lib/explorer/catalog").BodyId
+  | `neo:${string}`
+  | `spacecraft:${string}`;
 export interface SpaceObjectTrajectory {
   id: ObjectId;
   name: string;

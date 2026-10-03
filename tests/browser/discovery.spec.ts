@@ -6,6 +6,12 @@ const defaultNeo = fixture.discovery.objects.find(
 )!;
 async function setup(page: Page, failOne = false) {
   const requests = { discovery: 0, trajectories: [] as string[] };
+  await page.route("**/api/planet?*", (route) =>
+    route.fulfill({
+      status: 503,
+      json: { error: "Planet data excluded from this regression fixture." },
+    }),
+  );
   await page.route("**/api/trajectories", (route) =>
     route.fulfill({ json: fixture.earth }),
   );

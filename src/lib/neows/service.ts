@@ -1,5 +1,6 @@
+import { PROVIDERS } from "../providers/registry";
 import "server-only";
-import type { DiscoveryResult } from "../../models/neo";
+import type { DiscoveryWindow, DiscoveryResult } from "../../models/neo";
 import { AsyncCache, SerialQueue } from "../cache/asyncCache";
 import { normalizeFeed } from "./parser";
 import { discoveryWindow } from "./window";
@@ -13,8 +14,10 @@ export class NeoWsError extends Error {
   }
 }
 export class NeoWsService {
-  async discover(date: string): Promise<DiscoveryResult> {
-    const window = discoveryWindow(date);
+  async discover(
+    date: string,
+    window: DiscoveryWindow = discoveryWindow(date),
+  ): Promise<DiscoveryResult> {
     const configured = process.env.NASA_API_KEY?.trim();
     const key =
       configured ||
@@ -31,10 +34,10 @@ export class NeoWsService {
     });
     let response: Response;
     try {
-      response = await fetch(
-        `https://api.nasa.gov/neo/rest/v1/feed?${params}`,
-        { cache: "no-store", signal: AbortSignal.timeout(30_000) },
-      );
+      response = await fetch(`${PROVIDERS.neows.endpoint}?${params}`, {
+        cache: "no-store",
+        signal: AbortSignal.timeout(30_000),
+      });
     } catch {
       throw new NeoWsError(
         "NASA NeoWs is unavailable. Please try again later.",
@@ -76,5 +79,13 @@ export function discoverNeos(date: string): Promise<DiscoveryResult> {
   const window = discoveryWindow(date);
   return discoveryCache.get(`${window.start}:${window.end}`, () =>
     nasaQueue.run(() => new NeoWsService().discover(date)),
+  );
+}
+
+export function discoverNeoWindow(
+  window: DiscoveryWindow,
+): Promise<DiscoveryResult> {
+  return discoveryCache.get(`${window.start}:${window.end}`, () =>
+    nasaQueue.run(() => new NeoWsService().discover(window.start, window)),
   );
 }

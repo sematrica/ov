@@ -1,9 +1,16 @@
 "use client";
 import { Component, memo, useMemo, useRef, type ReactNode } from "react";
 import { Canvas, useFrame, type ThreeEvent } from "@react-three/fiber";
-import { Billboard, Line, OrbitControls, Stars } from "@react-three/drei";
-import { DoubleSide } from "three";
-import type { OrbitControls as OrbitControlsImpl } from "three-stdlib";
+import { Billboard, Line, Stars } from "@react-three/drei";
+import { DoubleSide, type Mesh, type PerspectiveCamera, Vector3 } from "three";
+import {
+  bodyMetadata,
+  DEFAULT_LAYERS,
+  type Layers,
+  type SolarCamera as SolarCameraState,
+} from "@/lib/explorer/catalog";
+import { SolarCamera } from "./SolarCamera";
+
 import type {
   ObjectId,
   SpaceObjectTrajectory,
@@ -11,9 +18,16 @@ import type {
 } from "@/models/trajectory";
 import { interpolatePosition, toScene } from "@/lib/astronomy/interpolate";
 import { LabelProjection, type LabelElements } from "./SceneLabels";
+import {
+  EncounterScene,
+  type EncounterOptions,
+} from "../encounter/EncounterScene";
+import type { EncounterDataset } from "@/models/encounter";
 const NEO_COLORS = ["#efb977", "#c6b3e6", "#93c8b7", "#d8bb9e", "#abc5e0"];
 function objectColor(id: ObjectId): string {
-  if (id === "earth") return "#79c9ff";
+  if (id.startsWith("spacecraft:")) return "#82e0d4";
+  const metadata = bodyMetadata(id);
+  if (metadata) return metadata.color;
   const hash = [...id].reduce((value, char) => value + char.charCodeAt(0), 0);
   return NEO_COLORS[hash % NEO_COLORS.length];
 }
@@ -32,20 +46,31 @@ function Body({
 }) {
   const position = toScene(interpolatePosition(trajectory.points, time));
   const color = objectColor(trajectory.id);
+  const mesh = useRef<Mesh>(null);
+  useFrame(({ camera, size }) => {
+    const base =
+      bodyMetadata(trajectory.id)?.displayRadius ?? VISUAL_RADIUS.asteroid;
+    const pixel =
+      (2 *
+        camera.position.distanceTo(new Vector3(...position)) *
+        Math.tan(((camera as PerspectiveCamera).fov * Math.PI) / 360)) /
+      size.height;
+    mesh.current?.scale.setScalar(
+      Math.max(base, pixel * (trajectory.id.startsWith("neo:") ? 2 : 4)),
+    );
+  });
   function select(event: ThreeEvent<MouseEvent>) {
     event.stopPropagation();
     onSelect(trajectory.id);
   }
   return (
     <group position={position}>
-      <mesh onClick={select}>
-        <sphereGeometry
-          args={[
-            VISUAL_RADIUS[trajectory.id === "earth" ? "earth" : "asteroid"],
-            32,
-            24,
-          ]}
-        />
+      <mesh ref={mesh} onClick={select}>
+        {trajectory.id.startsWith("spacecraft:") ? (
+          <octahedronGeometry args={[1, 0]} />
+        ) : (
+          <sphereGeometry args={[1, 32, 24]} />
+        )}
         <meshStandardMaterial
           color={color}
           emissive={color}
@@ -112,35 +137,6 @@ function Sun() {
     </group>
   );
 }
-function CameraController({ view }: { view: number }) {
-  const controls = useRef<OrbitControlsImpl>(null);
-  const previous = useRef(-1);
-  useFrame(({ camera, size }) => {
-    if (previous.current !== view) {
-      // Fit the orbital map into the shorter scene on narrow screens.
-      const cameraDistance = size.width < 850 ? 0.75 : 1;
-      camera.position.set(
-        0,
-        (view % 2 === 0 ? 2.65 : 4.1) * cameraDistance,
-        (view % 2 === 0 ? 3.1 : 0.001) * cameraDistance,
-      );
-      controls.current?.target.set(0, 0, 0);
-      controls.current?.update();
-      previous.current = view;
-    }
-  });
-  return (
-    <OrbitControls
-      ref={controls}
-      makeDefault
-      enableDamping
-      dampingFactor={0.08}
-      minDistance={0.35}
-      maxDistance={9}
-      maxPolarAngle={Math.PI * 0.95}
-    />
-  );
-}
 class SceneBoundary extends Component<
   { children: ReactNode },
   { failed: boolean }
@@ -166,20 +162,64 @@ export default function OrbitScene({
   selected,
   onSelect,
   view,
+  encounter,
+  encounterOptions,
+  onSeek,
+  layers = DEFAULT_LAYERS,
+  solarCamera = { mode: "inner", revision: 0 },
+  hiddenSpacecraftPaths = [],
 }: {
   data: TrajectoryDataset;
   time: number;
   selected: ObjectId;
   onSelect: (id: ObjectId) => void;
   view: number;
+  encounter?: EncounterDataset;
+  encounterOptions?: EncounterOptions;
+  onSeek?: (time: number) => void;
+  layers?: Layers;
+  solarCamera?: SolarCameraState;
+  hiddenSpacecraftPaths?: ObjectId[];
 }) {
   const labels: LabelElements = useRef({});
+  const encounterLabels = useRef<Record<string, HTMLDivElement | null>>({});
+  const visibleData = useMemo(
+    () => ({
+      ...data,
+      objects: data.objects.filter((o) =>
+        o.id.startsWith("spacecraft:")
+          ? layers.spacecraft
+          : o.id === "moon"
+            ? layers.moon
+            : o.id.startsWith("neo:")
+              ? layers.asteroids
+              : layers.planets,
+      ),
+    }),
+    [data, layers],
+  );
+  const labelData = useMemo(
+    () => ({
+      ...visibleData,
+      objects: visibleData.objects.filter((o) =>
+        o.id.startsWith("spacecraft:")
+          ? layers.spacecraftLabels
+          : layers.labels,
+      ),
+    }),
+    [visibleData, layers],
+  );
   return (
     <SceneBoundary>
       <Canvas
-        camera={{ position: [0, 2.65, 3.1], fov: 43, near: 0.01, far: 150 }}
+        camera={{
+          position: [0, 2.65, 3.1],
+          fov: 43,
+          near: 0.00001,
+          far: 20000,
+        }}
         dpr={[1, 2]}
-        gl={{ antialias: true, alpha: true }}
+        gl={{ antialias: true, alpha: true, logarithmicDepthBuffer: true }}
         fallback={
           <div className="scene-failure">
             WebGL is unavailable in this browser.
@@ -196,48 +236,123 @@ export default function OrbitScene({
           fade
           speed={0}
         />
-        <Sun />
-        {data.objects.map((object) => (
-          <group key={object.id}>
-            <Trajectory data={object} selected={selected === object.id} />
-            <Body
-              trajectory={object}
+        {encounter && encounterOptions && onSeek ? (
+          <EncounterScene
+            data={encounter}
+            time={time}
+            options={encounterOptions}
+            onSeek={onSeek}
+            layers={layers}
+            labelElements={encounterLabels}
+          />
+        ) : (
+          <>
+            <Sun />
+            {labelData.objects.map((object) => (
+              <group key={object.id}>
+                {(object.id.startsWith("spacecraft:")
+                  ? layers.spacecraftTrajectories &&
+                    !hiddenSpacecraftPaths.includes(object.id)
+                  : object.id.startsWith("neo:")
+                    ? layers.asteroidTrajectories
+                    : layers.planetOrbits) && (
+                  <Trajectory data={object} selected={selected === object.id} />
+                )}
+                <Body
+                  trajectory={object}
+                  time={time}
+                  selected={selected === object.id}
+                  onSelect={onSelect}
+                />
+              </group>
+            ))}
+            <SolarCamera
+              data={data}
               time={time}
-              selected={selected === object.id}
-              onSelect={onSelect}
+              selected={selected}
+              state={solarCamera}
+              view={view}
             />
-          </group>
-        ))}
-        <CameraController view={view} />
-        <LabelProjection data={data} time={time} elements={labels} />
+            {(layers.labels || layers.spacecraftLabels) && (
+              <LabelProjection
+                data={labelData}
+                time={time}
+                elements={labels}
+                showSun={layers.labels}
+                selected={selected}
+              />
+            )}
+          </>
+        )}
       </Canvas>
-      <div className="scene-labels">
-        <div
-          className="projected-label"
-          ref={(element) => {
-            labels.current.sun = element;
-          }}
-        >
-          <span className="sun-label">SUN</span>
-        </div>
-        {data.objects.map((object) => (
-          <div
-            key={object.id}
-            className="projected-label"
-            ref={(element) => {
-              labels.current[object.id] = element;
-            }}
-          >
-            <button
-              className={`body-label ${selected === object.id ? "selected" : ""}`}
-              style={{ color: objectColor(object.id) }}
-              onClick={() => onSelect(object.id)}
+      {encounter && layers.labels && (
+        <div className="scene-labels">
+          {[
+            { id: "earth", name: "EARTH" },
+            ...(encounter.moon && layers.moon
+              ? [{ id: "moon", name: "MOON" }]
+              : []),
+            ...(layers.asteroids
+              ? [{ id: "asteroid", name: encounter.neo.name }]
+              : []),
+            { id: "closest", name: "NASA closest approach" },
+          ].map((label) => (
+            <div
+              key={label.id}
+              className="projected-label"
+              ref={(el) => {
+                encounterLabels.current[label.id] = el;
+              }}
             >
-              <span>{object.name}</span>
-            </button>
+              {label.id === "closest" ? (
+                <button
+                  className="encounter-marker"
+                  onClick={() => onSeek?.(encounter.approach.time)}
+                >
+                  {label.name}
+                </button>
+              ) : (
+                <span className="encounter-label">{label.name}</span>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+      {!encounter &&
+        (layers.labels ||
+          (layers.spacecraftLabels && labelData.objects.length > 0)) && (
+          <div className="scene-labels">
+            <div
+              className="projected-label"
+              ref={(element) => {
+                labels.current.sun = element;
+              }}
+            >
+              {layers.labels && (
+                <button className="sun-label" onClick={() => onSelect("sun")}>
+                  SUN
+                </button>
+              )}
+            </div>
+            {labelData.objects.map((object) => (
+              <div
+                key={object.id}
+                className="projected-label"
+                ref={(element) => {
+                  labels.current[object.id] = element;
+                }}
+              >
+                <button
+                  className={`body-label ${selected === object.id ? "selected" : ""}`}
+                  style={{ color: objectColor(object.id) }}
+                  onClick={() => onSelect(object.id)}
+                >
+                  <span>{object.name}</span>
+                </button>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
+        )}
     </SceneBoundary>
   );
 }

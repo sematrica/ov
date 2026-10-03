@@ -14,10 +14,24 @@ import { SPEEDS, type Simulation } from "@/hooks/useSimulation";
 export function TimeControls({
   simulation: s,
   range,
+  closestTime,
+  eventTime,
 }: {
   simulation: Simulation;
   range: TimeRange;
+  closestTime?: number;
+  eventTime?: number;
 }) {
+  const encounter = closestTime !== undefined;
+  const step = encounter ? 600000 : DAY;
+  const speeds = encounter
+    ? [
+        { label: "1 minute / sec", rate: 60 },
+        { label: "10 minutes / sec", rate: 600 },
+        { label: "1 hour / sec", rate: 3600 },
+        { label: "6 hours / sec", rate: 21600 },
+      ]
+    : SPEEDS;
   const progress = ((s.time - range.start) / (range.end - range.start)) * 100;
   return (
     <section className="time-panel" aria-label="Simulation time controls">
@@ -47,9 +61,13 @@ export function TimeControls({
           </button>
           <button
             className="icon-button"
-            aria-label="Step backward one day"
-            title="Step backward one day"
-            onClick={() => s.seek(s.time - DAY)}
+            aria-label={
+              encounter ? "Step backward ten minutes" : "Step backward one day"
+            }
+            title={
+              encounter ? "Step backward ten minutes" : "Step backward one day"
+            }
+            onClick={() => s.seek(s.time - step)}
           >
             <SkipBack size={17} />
           </button>
@@ -66,9 +84,13 @@ export function TimeControls({
           </button>
           <button
             className="icon-button"
-            aria-label="Step forward one day"
-            title="Step forward one day"
-            onClick={() => s.seek(s.time + DAY)}
+            aria-label={
+              encounter ? "Step forward ten minutes" : "Step forward one day"
+            }
+            title={
+              encounter ? "Step forward ten minutes" : "Step forward one day"
+            }
+            onClick={() => s.seek(s.time + step)}
           >
             <SkipForward size={17} />
           </button>
@@ -90,7 +112,7 @@ export function TimeControls({
               value={s.rate}
               onChange={(event) => s.setRate(Number(event.target.value))}
             >
-              {SPEEDS.map((speed) => (
+              {speeds.map((speed) => (
                 <option key={speed.rate} value={speed.rate}>
                   {speed.label}
                 </option>
@@ -99,14 +121,45 @@ export function TimeControls({
           </label>
           <button
             className="now-button"
-            onClick={s.reset}
-            title="Reset to current time"
+            onClick={() => (encounter ? s.seek(closestTime!) : s.reset())}
+            title={
+              encounter ? "Jump to closest approach" : "Reset to current time"
+            }
           >
-            <RotateCcw size={14} /> Now
+            <RotateCcw size={14} /> {encounter ? "Closest" : "Now"}
           </button>
         </div>
       </div>
       <div className="timeline-wrap">
+        {!encounter &&
+          eventTime !== undefined &&
+          eventTime >= range.start &&
+          eventTime <= range.end && (
+            <button
+              className="encounter-timeline-marker"
+              aria-label="Selected event on timeline"
+              title="Selected close approach"
+              style={{
+                left: `${((eventTime - range.start) / (range.end - range.start)) * 100}%`,
+              }}
+              onClick={() => s.seek(eventTime)}
+            >
+              ◆
+            </button>
+          )}
+        {encounter && (
+          <button
+            className="encounter-timeline-marker"
+            aria-label="NASA closest approach on timeline"
+            title="NASA closest approach"
+            style={{
+              left: `${((closestTime! - range.start) / (range.end - range.start)) * 100}%`,
+            }}
+            onClick={() => s.seek(closestTime!)}
+          >
+            ◆
+          </button>
+        )}
         <input
           className="timeline"
           type="range"

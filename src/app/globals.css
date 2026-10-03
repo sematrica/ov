@@ -1590,3 +1590,550 @@ footer .live-dot {
     left: 290px;
   }
 }
+/* Stage 3: the same viewport and clock, with encounter-specific controls. */
+.mode-switch {
+  position: absolute;
+  top: 94px;
+  left: 38px;
+  z-index: 25;
+  display: flex;
+  gap: 4px;
+}
+.mode-switch button,
+.encounter-panel button,
+.encounter-status button {
+  background: #111820;
+  color: var(--muted);
+  border: 1px solid #ffffff25;
+  border-radius: 4px;
+  padding: 8px 10px;
+  cursor: pointer;
+  font-size: 10px;
+}
+.mode-switch button[aria-pressed="true"],
+.encounter-panel button[aria-pressed="true"] {
+  color: var(--text);
+  border-color: var(--accent);
+}
+.mode-switch button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.view-heading {
+  top: 148px;
+}
+.encounter-status {
+  position: absolute;
+  top: 130px;
+  left: 38px;
+  z-index: 30;
+  padding: 12px;
+  background: #17212b;
+  border: 1px solid #ffffff20;
+  max-width: 480px;
+  font-size: 12px;
+}
+.encounter-panel {
+  position: absolute;
+  right: 38px;
+  top: 150px;
+  width: 290px;
+  max-height: calc(100svh - 390px);
+  overflow: auto;
+  z-index: 20;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px;
+  font-size: 12px;
+  line-height: 1.6;
+}
+.encounter-panel h2 {
+  font-size: 22px;
+  margin: 6px 0 16px;
+}
+.encounter-panel h3 {
+  font-size: 10px;
+  letter-spacing: 1.4px;
+  color: var(--muted);
+}
+.encounter-panel time {
+  font-size: 10px;
+  color: var(--muted);
+}
+.encounter-panel .encounter-distance {
+  font-size: 25px;
+  margin: 12px 0 0;
+}
+.encounter-distance small {
+  display: block;
+  font-size: 11px;
+  color: var(--muted);
+}
+.encounter-cameras {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  margin: 18px 0;
+}
+.encounter-toggles {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.encounter-toggles label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.encounter-panel details {
+  border-top: 1px solid var(--border);
+  margin-top: 15px;
+  padding-top: 12px;
+}
+.encounter-panel summary {
+  cursor: pointer;
+  font-size: 10px;
+  color: var(--muted);
+}
+.encounter-panel dd {
+  margin: 0 0 8px;
+}
+.encounter-panel dt {
+  color: var(--muted);
+}
+.encounter-label {
+  white-space: nowrap;
+  font: 10px Arial;
+  color: #d3dce2;
+  padding: 4px 8px;
+  pointer-events: none;
+}
+.encounter-marker {
+  white-space: nowrap;
+  background: #111a20bb;
+  border: 1px solid #ffffff25;
+  border-radius: 3px;
+  color: #d5c6ac;
+  padding: 4px;
+  font-size: 9px;
+  cursor: pointer;
+}
+.encounter-timeline-marker {
+  position: absolute;
+  top: -12px;
+  transform: translateX(-50%);
+  border: 0;
+  background: transparent;
+  color: var(--accent);
+  cursor: pointer;
+  z-index: 2;
+  font-size: 12px;
+  padding: 0;
+}
+.observatory:has(.encounter-panel) .space-viewport {
+  right: 335px;
+}
+@media (max-width: 720px) {
+  .mode-switch {
+    top: 82px;
+    left: 20px;
+  }
+  .view-heading {
+    top: 135px;
+  }
+  .encounter-status {
+    top: 120px;
+    left: 20px;
+    right: 20px;
+  }
+  .observatory:has(.encounter-panel) {
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    min-height: 100svh;
+    padding-bottom: 20px;
+  }
+  .observatory:has(.encounter-panel) header {
+    flex-shrink: 0;
+  }
+  .observatory:has(.encounter-panel) .view-heading {
+    position: relative;
+    top: auto;
+    left: auto;
+    margin: 68px 22px 20px;
+  }
+  .observatory:has(.encounter-panel) .space-viewport {
+    position: relative;
+    inset: auto;
+    width: 100%;
+    height: 400px;
+    flex-shrink: 0;
+  }
+  .observatory:has(.encounter-panel) .time-panel {
+    position: relative;
+    inset: auto;
+    margin: 12px 20px;
+    width: auto;
+    order: 4;
+  }
+  .encounter-panel {
+    position: relative;
+    inset: auto;
+    max-height: none;
+    width: auto;
+    margin: 12px 20px;
+    order: 5;
+  }
+  .observatory:has(.encounter-panel) .scene-caption,
+  .observatory:has(.encounter-panel) .interaction-hint {
+    display: none;
+  }
+  .observatory:has(.encounter-panel) footer {
+    position: relative;
+    inset: auto;
+    margin: 20px;
+    order: 6;
+  }
+}
+@media (max-width: 720px) {
+  .observatory:has(.discovery-panel) .view-heading {
+    margin-top: 68px;
+  }
+}
+/* Stage 4 exploration controls: popovers and an on-demand event drawer. */
+.explorer-toolbar {
+  position: absolute;
+  top: 130px;
+  left: 38px;
+  right: 38px;
+  z-index: 35;
+  display: flex;
+  gap: 6px;
+  align-items: flex-start;
+}
+.explorer-toolbar button,
+.explorer-toolbar summary,
+.event-drawer button,
+.event-navigation button,
+.explorer-notice button {
+  font-size: 10px;
+  color: var(--text);
+  background: #121a22;
+  border: 1px solid #ffffff20;
+  border-radius: 4px;
+  padding: 8px 10px;
+  cursor: pointer;
+}
+.explorer-toolbar details {
+  position: relative;
+}
+.explorer-toolbar details[open] {
+  background: #121a22;
+  border: 1px solid #ffffff20;
+  padding: 8px;
+  border-radius: 5px;
+  max-width: 280px;
+  max-height: 380px;
+  overflow: auto;
+}
+.explorer-toolbar details[open] summary {
+  margin-bottom: 8px;
+}
+.explorer-toolbar label,
+.event-explorer label {
+  display: block;
+  font-size: 11px;
+  color: var(--muted);
+  margin: 8px 0;
+}
+.explorer-toolbar input:not([type="checkbox"]),
+.event-explorer input:not([type="checkbox"]),
+.event-explorer select {
+  display: block;
+  width: 100%;
+  background: #080d13;
+  color: var(--text);
+  border: 1px solid #ffffff25;
+  border-radius: 3px;
+  padding: 7px;
+  margin-top: 4px;
+}
+.explorer-toolbar p {
+  font-size: 11px;
+}
+.search-results {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.view-heading {
+  top: 185px;
+}
+.event-drawer {
+  position: absolute;
+  right: 25px;
+  top: 178px;
+  bottom: 225px;
+  width: 390px;
+  background: #10161ff5;
+  border: 1px solid #ffffff25;
+  border-radius: 8px;
+  z-index: 40;
+  overflow: auto;
+  padding: 20px;
+  box-shadow: 0 20px 70px #0009;
+}
+.drawer-close {
+  float: right;
+}
+.event-explorer h2 {
+  font-size: 22px;
+  margin: 12px 0;
+}
+.explorer-note {
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+.explorer-presets,
+.event-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  align-items: center;
+}
+.explorer-date-range {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.event-explorer details {
+  font-size: 11px;
+  margin-top: 12px;
+}
+.event-row {
+  border-top: 1px solid var(--border);
+  padding: 14px 0;
+  font-size: 11px;
+  line-height: 1.7;
+}
+.event-row h3 {
+  font-size: 14px;
+  margin: 0;
+}
+.event-row time {
+  color: var(--muted);
+}
+.event-row p {
+  margin: 6px 0;
+}
+.explorer-notice {
+  position: absolute;
+  top: 175px;
+  left: 38px;
+  max-width: 450px;
+  z-index: 45;
+  background: #1b2632;
+  border: 1px solid #ffffff30;
+  border-radius: 4px;
+  padding: 12px;
+  font-size: 12px;
+}
+.explorer-notice button {
+  margin-left: 10px;
+}
+.event-navigation {
+  position: absolute;
+  bottom: 224px;
+  left: 38px;
+  z-index: 25;
+  display: flex;
+  gap: 5px;
+}
+.event-drawer button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+@media (max-width: 720px) {
+  .explorer-toolbar {
+    top: 120px;
+    left: 20px;
+    right: 20px;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  .explorer-toolbar details[open] {
+    position: absolute;
+    top: 38px;
+    left: 0;
+    width: 280px;
+    z-index: 50;
+  }
+  .observatory:has(.discovery-panel) .view-heading,
+  .observatory:has(.encounter-panel) .view-heading {
+    margin-top: 160px;
+  }
+  .event-drawer {
+    position: fixed;
+    top: 80px;
+    bottom: 20px;
+    left: 12px;
+    right: 12px;
+    width: auto;
+    z-index: 60;
+  }
+  .explorer-notice {
+    position: fixed;
+    top: 150px;
+    left: 20px;
+    right: 20px;
+  }
+  .event-navigation {
+    position: relative;
+    inset: auto;
+    margin: 12px 20px;
+    order: 3;
+    flex-wrap: wrap;
+  }
+}
+@media (min-width: 721px) {
+  .observatory:has(.discovery-panel) .view-heading {
+    top: 185px;
+  }
+  .discovery-panel,
+  .stage-two-details,
+  .encounter-panel {
+    top: 185px;
+  }
+  .base-objects {
+    top: 309px;
+  }
+  .stage-two-details {
+    max-height: calc(100% - 483px);
+  }
+  .encounter-panel {
+    max-height: calc(100svh - 425px);
+  }
+}
+.event-drawer {
+  background: #10161f;
+}
+.encounter-marker {
+  pointer-events: auto;
+}
+.spacecraft-explorer {
+  font-size: 12px;
+  line-height: 1.65;
+}
+.spacecraft-explorer h2 {
+  font-size: 22px;
+  clear: both;
+}
+.spacecraft-explorer label {
+  display: block;
+  margin: 10px 0;
+  color: var(--muted);
+  font-size: 11px;
+}
+.spacecraft-explorer input {
+  display: block;
+  width: 100%;
+  padding: 8px;
+  background: #080d13;
+  color: var(--text);
+  border: 1px solid #ffffff25;
+  border-radius: 4px;
+  margin-top: 4px;
+}
+.spacecraft-results {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin: 16px 0;
+}
+.spacecraft-results button {
+  text-align: left;
+}
+.spacecraft-results span {
+  display: block;
+  color: var(--muted);
+  margin-top: 4px;
+}
+.spacecraft-results button[aria-pressed="true"] {
+  border-color: #82e0d4;
+}
+.spacecraft-choice,
+.spacecraft-session {
+  border-top: 1px solid var(--border);
+  padding: 12px 0;
+}
+.spacecraft-session > span {
+  margin-left: 8px;
+  font-size: 10px;
+  color: var(--muted);
+}
+.spacecraft-panel {
+  font-size: 12px;
+  line-height: 1.6;
+  overflow: auto;
+}
+.spacecraft-panel h2 {
+  font-size: 23px;
+  margin: 8px 0;
+}
+.spacecraft-panel h3 {
+  font-size: 10px;
+  letter-spacing: 1.3px;
+  color: var(--muted);
+  margin: 20px 0 10px;
+}
+.spacecraft-panel button {
+  background: #14202a;
+  color: var(--text);
+  border: 1px solid #ffffff25;
+  border-radius: 4px;
+  padding: 6px 8px;
+  cursor: pointer;
+  font-size: 10px;
+}
+.spacecraft-panel button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.spacecraft-panel dt {
+  color: var(--muted);
+  font-size: 11px;
+}
+.spacecraft-panel dd {
+  margin: 0 0 12px;
+  font-size: 14px;
+}
+.spacecraft-panel time {
+  font-size: 10px;
+  color: var(--muted);
+}
+.mission-timeline {
+  list-style: none;
+  padding: 0;
+  border-left: 1px solid #82e0d450;
+}
+.mission-timeline li {
+  padding: 0 0 14px 12px;
+}
+.mission-timeline span {
+  display: block;
+  font-size: 11px;
+}
+@media (max-width: 720px) {
+  .explorer-toolbar {
+    gap: 3px;
+  }
+  .spacecraft-panel {
+    max-height: none;
+  }
+  .observatory:has(.discovery-panel) .view-heading,
+  .observatory:has(.encounter-panel) .view-heading {
+    margin-top: 185px;
+  }
+}

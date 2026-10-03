@@ -9,8 +9,17 @@ export class HorizonsError extends Error {
 export function extractResult(payload: unknown): string {
   if (!payload || typeof payload !== "object")
     throw new HorizonsError("JPL returned an invalid response.");
-  if ("error" in payload && typeof payload.error === "string")
+  if ("error" in payload && typeof payload.error === "string") {
+    if (
+      /No ephemeris|No data available|SPKINSUFFDATA|insufficient ephemeris/i.test(
+        payload.error,
+      )
+    )
+      throw new HorizonsError(
+        "Trajectory unavailable for selected date. Horizons does not cover the full requested interval; try a shorter or historical range.",
+      );
     throw new HorizonsError(`JPL Horizons: ${payload.error}`);
+  }
   if (!("result" in payload) || typeof payload.result !== "string")
     throw new HorizonsError("JPL response is missing its result field.");
   if (
@@ -28,9 +37,17 @@ export function extractResult(payload: unknown): string {
     )
   ) {
     throw new HorizonsError(
-      "Horizons could not find this asteroid. Its designation may not yet be available in JPL.",
+      "Horizons could not find this object. Its designation may not yet be available in JPL.",
     );
   }
+  if (
+    /No ephemeris|No data available|SPKINSUFFDATA|insufficient ephemeris/i.test(
+      payload.result,
+    )
+  )
+    throw new HorizonsError(
+      "Trajectory unavailable for selected date. Horizons does not cover the full requested interval; try a shorter or historical range.",
+    );
   return payload.result;
 }
 export function parseVectors(

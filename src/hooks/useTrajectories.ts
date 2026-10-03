@@ -14,9 +14,13 @@ export function useTrajectories() {
     const controller = new AbortController();
     async function load() {
       try {
-        const response = await fetch("/api/trajectories", {
-          signal: controller.signal,
-        });
+        const date = new URLSearchParams(window.location.search).get("date");
+        const response = await fetch(
+          `/api/trajectories${date ? `?date=${encodeURIComponent(date)}` : ""}`,
+          {
+            signal: controller.signal,
+          },
+        );
         if (!response.ok) {
           const failure: unknown = await response.json();
           throw new Error(
